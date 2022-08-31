@@ -92,7 +92,7 @@ void FMediaPipeModule::StartupModule()
 
 	FString BinariesDir, DataDir;
 	#if WITH_EDITOR
-		BinariesDir = FPaths::Combine(*PluginBaseDir, TEXT("Binaries"), TEXT(UMP_BIN_ARCH));
+		BinariesDir = FPaths::Combine(*PluginBaseDir, TEXT("ThirdParty/mediapipe/Binaries"), TEXT(UMP_BIN_ARCH));
 		DataDir = FPaths::Combine(*PluginBaseDir, TEXT("ThirdParty/mediapipe/Data"));
 	#else
 		BinariesDir = FPlatformProcess::BaseDir();
@@ -104,7 +104,9 @@ void FMediaPipeModule::StartupModule()
 	FString LibPath = FPaths::Combine(*BinariesDir, TEXT(UMP_LIB_NAME) TEXT(UMP_LIB_EXT));
 
 	PLUGIN_LOG_INFO(TEXT("GetDllHandle: %s"), *LibPath);
+	FPlatformProcess::PushDllDirectory(*BinariesDir);
 	LibUmp = FPlatformProcess::GetDllHandle(*LibPath);
+	FPlatformProcess::PopDllDirectory(*BinariesDir);
 	PLUGIN_LOG_INFO(TEXT("-> %p"), LibUmp);
 
 	if (!LibUmp)
